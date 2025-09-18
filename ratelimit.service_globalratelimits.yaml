@@ -1,0 +1,1474 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  labels:
+    srls.version: D-05.008.00-35
+  name: globalratelimits.ratelimit.service
+spec:
+  group: ratelimit.service
+  names:
+    kind: GlobalRateLimit
+    listKind: GlobalRateLimitList
+    plural: globalratelimits
+    singular: globalratelimit
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: GlobalRateLimit is the Schema for the globalratelimits API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: GlobalRateLimitSpec defines the desired state of GlobalRateLimit
+            properties:
+              body_sizes_entries:
+                description: Specifies body size limits that can be used at any endpoints
+                items:
+                  properties:
+                    body_sizes:
+                      description: Body sizes entry
+                      items:
+                        properties:
+                          anon_value:
+                            description: Specifies limit for request without header
+                            format: int64
+                            nullable: true
+                            type: integer
+                          body_size:
+                            default: "0"
+                            description: Message body size, unsigned int (64 bytes),
+                              may contain optional unit (K|Ki|M|Mi|G|Gi) without any
+                              delimiters
+                            pattern: ^[0-9]+(B|[KMG]i?B?)?$
+                            type: string
+                          invokers:
+                            items:
+                              properties:
+                                api_contract_id:
+                                  description: API contract ID (from META) for integration
+                                    with the Capacity Calculator
+                                  pattern: ^(0|[1-9]\d*)$
+                                  type: string
+                                header_regexp:
+                                  description: Specifies regular expression for consumer
+                                  pattern: ^[\P{C}]+$
+                                  type: string
+                                header_value:
+                                  description: Specifies particular consumer
+                                  minLength: 1
+                                  type: string
+                                name:
+                                  description: Human-readable consumer description
+                                  type: string
+                                schedule:
+                                  description: Specifies unnamed schedule for quota
+                                  nullable: true
+                                  properties:
+                                    soft:
+                                      description: Specifies soft quota
+                                      nullable: true
+                                      properties:
+                                        step:
+                                          default: 1
+                                          description: Resource soft quota increment
+                                            value
+                                          type: integer
+                                        value:
+                                          default: 1
+                                          description: The current soft quota value
+                                            of a resource
+                                          type: integer
+                                      type: object
+                                    start:
+                                      description: Time to start schedule for quota
+                                      nullable: true
+                                      properties:
+                                        day:
+                                          default: '*'
+                                          description: Specifies day (1-31)
+                                          type: string
+                                        hour:
+                                          default: '*'
+                                          description: Specifies hour (0-24)
+                                          type: string
+                                        minute:
+                                          default: '*'
+                                          description: Specifies minutes (0-59)
+                                          type: string
+                                        month:
+                                          default: '*'
+                                          description: Specifies month (1-12, 1-january)
+                                          type: string
+                                        second:
+                                          default: '*'
+                                          description: Specifies seconds (0-59)
+                                          type: string
+                                        weekday:
+                                          default: '*'
+                                          description: Specifies weekday (0-6, 0-sunday)
+                                          type: string
+                                      type: object
+                                    stop:
+                                      description: Time to stop schedule for quota
+                                      nullable: true
+                                      properties:
+                                        day:
+                                          default: '*'
+                                          description: Specifies day (1-31)
+                                          type: string
+                                        hour:
+                                          default: '*'
+                                          description: Specifies hour (0-24)
+                                          type: string
+                                        minute:
+                                          default: '*'
+                                          description: Specifies minutes (0-59)
+                                          type: string
+                                        month:
+                                          default: '*'
+                                          description: Specifies month (1-12, 1-january)
+                                          type: string
+                                        second:
+                                          default: '*'
+                                          description: Specifies seconds (0-59)
+                                          type: string
+                                        weekday:
+                                          default: '*'
+                                          description: Specifies weekday (0-6, 0-sunday)
+                                          type: string
+                                      type: object
+                                    unit:
+                                      default: second
+                                      description: Specifies time unit
+                                      enum:
+                                      - second
+                                      - minute
+                                      - hour
+                                      - day
+                                      type: string
+                                    value:
+                                      default: 1
+                                      description: Specifies limit
+                                      type: integer
+                                  required:
+                                  - start
+                                  - stop
+                                  type: object
+                                soft:
+                                  description: Specifies soft quota
+                                  nullable: true
+                                  properties:
+                                    step:
+                                      default: 1
+                                      description: Resource soft quota increment value
+                                      type: integer
+                                    value:
+                                      default: 1
+                                      description: The current soft quota value of
+                                        a resource
+                                      type: integer
+                                  type: object
+                                unit:
+                                  default: second
+                                  description: Specifies time unit
+                                  enum:
+                                  - second
+                                  - minute
+                                  - hour
+                                  - day
+                                  type: string
+                                value:
+                                  default: 1
+                                  description: Specifies limit
+                                  type: integer
+                              type: object
+                            nullable: true
+                            type: array
+                          soft:
+                            description: Specifies soft quota
+                            nullable: true
+                            properties:
+                              step:
+                                default: 1
+                                description: Resource soft quota increment value
+                                type: integer
+                              value:
+                                default: 1
+                                description: The current soft quota value of a resource
+                                type: integer
+                            type: object
+                          unit:
+                            default: second
+                            description: Specifies time unit
+                            enum:
+                            - second
+                            - minute
+                            - hour
+                            - day
+                            type: string
+                          value:
+                            default: 1
+                            description: Specifies limit
+                            format: int64
+                            type: integer
+                        type: object
+                      nullable: true
+                      type: array
+                    body_sizes_key:
+                      description: Unique body sizes entry key
+                      minLength: 1
+                      type: string
+                  required:
+                  - body_sizes_key
+                  type: object
+                nullable: true
+                type: array
+              endpoints:
+                items:
+                  properties:
+                    by_header:
+                      nullable: true
+                      properties:
+                        anon_value:
+                          description: Specifies limit for request without header
+                          format: int64
+                          nullable: true
+                          type: integer
+                        body_sizes_key:
+                          description: Body sizes entry key
+                          nullable: true
+                          type: string
+                        header:
+                          default: synapse-consumerid
+                          description: Specifies header to be used
+                          pattern: ^[^,\s]+(,[^,\s]+){0,2}$
+                          type: string
+                        invokers:
+                          items:
+                            properties:
+                              api_contract_id:
+                                description: API contract ID (from META) for integration
+                                  with the Capacity Calculator
+                                pattern: ^(0|[1-9]\d*)$
+                                type: string
+                              header_regexp:
+                                description: Specifies regular expression for consumer
+                                pattern: ^[\P{C}]+$
+                                type: string
+                              header_value:
+                                description: Specifies particular consumer
+                                minLength: 1
+                                type: string
+                              name:
+                                description: Human-readable consumer description
+                                type: string
+                              schedule:
+                                description: Specifies unnamed schedule for quota
+                                nullable: true
+                                properties:
+                                  soft:
+                                    description: Specifies soft quota
+                                    nullable: true
+                                    properties:
+                                      step:
+                                        default: 1
+                                        description: Resource soft quota increment
+                                          value
+                                        type: integer
+                                      value:
+                                        default: 1
+                                        description: The current soft quota value
+                                          of a resource
+                                        type: integer
+                                    type: object
+                                  start:
+                                    description: Time to start schedule for quota
+                                    nullable: true
+                                    properties:
+                                      day:
+                                        default: '*'
+                                        description: Specifies day (1-31)
+                                        type: string
+                                      hour:
+                                        default: '*'
+                                        description: Specifies hour (0-24)
+                                        type: string
+                                      minute:
+                                        default: '*'
+                                        description: Specifies minutes (0-59)
+                                        type: string
+                                      month:
+                                        default: '*'
+                                        description: Specifies month (1-12, 1-january)
+                                        type: string
+                                      second:
+                                        default: '*'
+                                        description: Specifies seconds (0-59)
+                                        type: string
+                                      weekday:
+                                        default: '*'
+                                        description: Specifies weekday (0-6, 0-sunday)
+                                        type: string
+                                    type: object
+                                  stop:
+                                    description: Time to stop schedule for quota
+                                    nullable: true
+                                    properties:
+                                      day:
+                                        default: '*'
+                                        description: Specifies day (1-31)
+                                        type: string
+                                      hour:
+                                        default: '*'
+                                        description: Specifies hour (0-24)
+                                        type: string
+                                      minute:
+                                        default: '*'
+                                        description: Specifies minutes (0-59)
+                                        type: string
+                                      month:
+                                        default: '*'
+                                        description: Specifies month (1-12, 1-january)
+                                        type: string
+                                      second:
+                                        default: '*'
+                                        description: Specifies seconds (0-59)
+                                        type: string
+                                      weekday:
+                                        default: '*'
+                                        description: Specifies weekday (0-6, 0-sunday)
+                                        type: string
+                                    type: object
+                                  unit:
+                                    default: second
+                                    description: Specifies time unit
+                                    enum:
+                                    - second
+                                    - minute
+                                    - hour
+                                    - day
+                                    type: string
+                                  value:
+                                    default: 1
+                                    description: Specifies limit
+                                    type: integer
+                                required:
+                                - start
+                                - stop
+                                type: object
+                              soft:
+                                description: Specifies soft quota
+                                nullable: true
+                                properties:
+                                  step:
+                                    default: 1
+                                    description: Resource soft quota increment value
+                                    type: integer
+                                  value:
+                                    default: 1
+                                    description: The current soft quota value of a
+                                      resource
+                                    type: integer
+                                type: object
+                              unit:
+                                default: second
+                                description: Specifies time unit
+                                enum:
+                                - second
+                                - minute
+                                - hour
+                                - day
+                                type: string
+                              value:
+                                default: 1
+                                description: Specifies limit
+                                type: integer
+                            type: object
+                          nullable: true
+                          type: array
+                        modify_header:
+                          description: Specifies how the header will be modified
+                          nullable: true
+                          properties:
+                            rule:
+                              description: Specifies the rule of modify
+                              nullable: true
+                              type: string
+                            type:
+                              default: cert
+                              description: Specifies the type of modify
+                              enum:
+                              - cert
+                              type: string
+                          type: object
+                        size_source:
+                          description: Specifies where size is coming from to build
+                            envoy filters
+                          nullable: true
+                          properties:
+                            header:
+                              description: Specifies header to get size from
+                              nullable: true
+                              type: string
+                          type: object
+                        soft:
+                          description: Specifies soft quota
+                          nullable: true
+                          properties:
+                            step:
+                              default: 1
+                              description: Resource soft quota increment value
+                              type: integer
+                            value:
+                              default: 1
+                              description: The current soft quota value of a resource
+                              type: integer
+                          type: object
+                        unit:
+                          default: second
+                          description: Specifies time unit
+                          enum:
+                          - second
+                          - minute
+                          - hour
+                          - day
+                          type: string
+                        uri_prefixes:
+                          items:
+                            properties:
+                              anon_value:
+                                description: Specifies limit for request without header
+                                format: int64
+                                nullable: true
+                                type: integer
+                              body_sizes_key:
+                                description: Body sizes entry key
+                                nullable: true
+                                type: string
+                              http_methods:
+                                items:
+                                  properties:
+                                    anon_value:
+                                      description: Specifies limit for request without
+                                        header
+                                      format: int64
+                                      nullable: true
+                                      type: integer
+                                    body_sizes_key:
+                                      description: Body sizes entry key
+                                      nullable: true
+                                      type: string
+                                    http_method:
+                                      description: Specifies method in request
+                                      enum:
+                                      - GET
+                                      - POST
+                                      - PUT
+                                      - DELETE
+                                      - HEAD
+                                      - CONNECT
+                                      - OPTIONS
+                                      - TRACE
+                                      - PATCH
+                                      type: string
+                                    invokers:
+                                      items:
+                                        properties:
+                                          api_contract_id:
+                                            description: API contract ID (from META)
+                                              for integration with the Capacity Calculator
+                                            pattern: ^(0|[1-9]\d*)$
+                                            type: string
+                                          header_regexp:
+                                            description: Specifies regular expression
+                                              for consumer
+                                            pattern: ^[\P{C}]+$
+                                            type: string
+                                          header_value:
+                                            description: Specifies particular consumer
+                                            minLength: 1
+                                            type: string
+                                          name:
+                                            description: Human-readable consumer description
+                                            type: string
+                                          schedule:
+                                            description: Specifies unnamed schedule
+                                              for quota
+                                            nullable: true
+                                            properties:
+                                              soft:
+                                                description: Specifies soft quota
+                                                nullable: true
+                                                properties:
+                                                  step:
+                                                    default: 1
+                                                    description: Resource soft quota
+                                                      increment value
+                                                    type: integer
+                                                  value:
+                                                    default: 1
+                                                    description: The current soft
+                                                      quota value of a resource
+                                                    type: integer
+                                                type: object
+                                              start:
+                                                description: Time to start schedule
+                                                  for quota
+                                                nullable: true
+                                                properties:
+                                                  day:
+                                                    default: '*'
+                                                    description: Specifies day (1-31)
+                                                    type: string
+                                                  hour:
+                                                    default: '*'
+                                                    description: Specifies hour (0-24)
+                                                    type: string
+                                                  minute:
+                                                    default: '*'
+                                                    description: Specifies minutes
+                                                      (0-59)
+                                                    type: string
+                                                  month:
+                                                    default: '*'
+                                                    description: Specifies month (1-12,
+                                                      1-january)
+                                                    type: string
+                                                  second:
+                                                    default: '*'
+                                                    description: Specifies seconds
+                                                      (0-59)
+                                                    type: string
+                                                  weekday:
+                                                    default: '*'
+                                                    description: Specifies weekday
+                                                      (0-6, 0-sunday)
+                                                    type: string
+                                                type: object
+                                              stop:
+                                                description: Time to stop schedule
+                                                  for quota
+                                                nullable: true
+                                                properties:
+                                                  day:
+                                                    default: '*'
+                                                    description: Specifies day (1-31)
+                                                    type: string
+                                                  hour:
+                                                    default: '*'
+                                                    description: Specifies hour (0-24)
+                                                    type: string
+                                                  minute:
+                                                    default: '*'
+                                                    description: Specifies minutes
+                                                      (0-59)
+                                                    type: string
+                                                  month:
+                                                    default: '*'
+                                                    description: Specifies month (1-12,
+                                                      1-january)
+                                                    type: string
+                                                  second:
+                                                    default: '*'
+                                                    description: Specifies seconds
+                                                      (0-59)
+                                                    type: string
+                                                  weekday:
+                                                    default: '*'
+                                                    description: Specifies weekday
+                                                      (0-6, 0-sunday)
+                                                    type: string
+                                                type: object
+                                              unit:
+                                                default: second
+                                                description: Specifies time unit
+                                                enum:
+                                                - second
+                                                - minute
+                                                - hour
+                                                - day
+                                                type: string
+                                              value:
+                                                default: 1
+                                                description: Specifies limit
+                                                type: integer
+                                            required:
+                                            - start
+                                            - stop
+                                            type: object
+                                          soft:
+                                            description: Specifies soft quota
+                                            nullable: true
+                                            properties:
+                                              step:
+                                                default: 1
+                                                description: Resource soft quota increment
+                                                  value
+                                                type: integer
+                                              value:
+                                                default: 1
+                                                description: The current soft quota
+                                                  value of a resource
+                                                type: integer
+                                            type: object
+                                          unit:
+                                            default: second
+                                            description: Specifies time unit
+                                            enum:
+                                            - second
+                                            - minute
+                                            - hour
+                                            - day
+                                            type: string
+                                          value:
+                                            default: 1
+                                            description: Specifies limit
+                                            type: integer
+                                        type: object
+                                      nullable: true
+                                      type: array
+                                    soft:
+                                      description: Specifies soft quota
+                                      nullable: true
+                                      properties:
+                                        step:
+                                          default: 1
+                                          description: Resource soft quota increment
+                                            value
+                                          type: integer
+                                        value:
+                                          default: 1
+                                          description: The current soft quota value
+                                            of a resource
+                                          type: integer
+                                      type: object
+                                    unit:
+                                      default: second
+                                      description: Specifies time unit
+                                      enum:
+                                      - second
+                                      - minute
+                                      - hour
+                                      - day
+                                      type: string
+                                    value:
+                                      default: 1
+                                      description: Specifies limit
+                                      format: int64
+                                      type: integer
+                                  required:
+                                  - http_method
+                                  type: object
+                                nullable: true
+                                type: array
+                              invokers:
+                                items:
+                                  properties:
+                                    api_contract_id:
+                                      description: API contract ID (from META) for
+                                        integration with the Capacity Calculator
+                                      pattern: ^(0|[1-9]\d*)$
+                                      type: string
+                                    header_regexp:
+                                      description: Specifies regular expression for
+                                        consumer
+                                      pattern: ^[\P{C}]+$
+                                      type: string
+                                    header_value:
+                                      description: Specifies particular consumer
+                                      minLength: 1
+                                      type: string
+                                    name:
+                                      description: Human-readable consumer description
+                                      type: string
+                                    schedule:
+                                      description: Specifies unnamed schedule for
+                                        quota
+                                      nullable: true
+                                      properties:
+                                        soft:
+                                          description: Specifies soft quota
+                                          nullable: true
+                                          properties:
+                                            step:
+                                              default: 1
+                                              description: Resource soft quota increment
+                                                value
+                                              type: integer
+                                            value:
+                                              default: 1
+                                              description: The current soft quota
+                                                value of a resource
+                                              type: integer
+                                          type: object
+                                        start:
+                                          description: Time to start schedule for
+                                            quota
+                                          nullable: true
+                                          properties:
+                                            day:
+                                              default: '*'
+                                              description: Specifies day (1-31)
+                                              type: string
+                                            hour:
+                                              default: '*'
+                                              description: Specifies hour (0-24)
+                                              type: string
+                                            minute:
+                                              default: '*'
+                                              description: Specifies minutes (0-59)
+                                              type: string
+                                            month:
+                                              default: '*'
+                                              description: Specifies month (1-12,
+                                                1-january)
+                                              type: string
+                                            second:
+                                              default: '*'
+                                              description: Specifies seconds (0-59)
+                                              type: string
+                                            weekday:
+                                              default: '*'
+                                              description: Specifies weekday (0-6,
+                                                0-sunday)
+                                              type: string
+                                          type: object
+                                        stop:
+                                          description: Time to stop schedule for quota
+                                          nullable: true
+                                          properties:
+                                            day:
+                                              default: '*'
+                                              description: Specifies day (1-31)
+                                              type: string
+                                            hour:
+                                              default: '*'
+                                              description: Specifies hour (0-24)
+                                              type: string
+                                            minute:
+                                              default: '*'
+                                              description: Specifies minutes (0-59)
+                                              type: string
+                                            month:
+                                              default: '*'
+                                              description: Specifies month (1-12,
+                                                1-january)
+                                              type: string
+                                            second:
+                                              default: '*'
+                                              description: Specifies seconds (0-59)
+                                              type: string
+                                            weekday:
+                                              default: '*'
+                                              description: Specifies weekday (0-6,
+                                                0-sunday)
+                                              type: string
+                                          type: object
+                                        unit:
+                                          default: second
+                                          description: Specifies time unit
+                                          enum:
+                                          - second
+                                          - minute
+                                          - hour
+                                          - day
+                                          type: string
+                                        value:
+                                          default: 1
+                                          description: Specifies limit
+                                          type: integer
+                                      required:
+                                      - start
+                                      - stop
+                                      type: object
+                                    soft:
+                                      description: Specifies soft quota
+                                      nullable: true
+                                      properties:
+                                        step:
+                                          default: 1
+                                          description: Resource soft quota increment
+                                            value
+                                          type: integer
+                                        value:
+                                          default: 1
+                                          description: The current soft quota value
+                                            of a resource
+                                          type: integer
+                                      type: object
+                                    unit:
+                                      default: second
+                                      description: Specifies time unit
+                                      enum:
+                                      - second
+                                      - minute
+                                      - hour
+                                      - day
+                                      type: string
+                                    value:
+                                      default: 1
+                                      description: Specifies limit
+                                      type: integer
+                                  type: object
+                                nullable: true
+                                type: array
+                              soft:
+                                description: Specifies soft quota
+                                nullable: true
+                                properties:
+                                  step:
+                                    default: 1
+                                    description: Resource soft quota increment value
+                                    type: integer
+                                  value:
+                                    default: 1
+                                    description: The current soft quota value of a
+                                      resource
+                                    type: integer
+                                type: object
+                              unit:
+                                default: second
+                                description: Specifies time unit
+                                enum:
+                                - second
+                                - minute
+                                - hour
+                                - day
+                                type: string
+                              uri_prefix:
+                                description: Specifies particular prefix in url
+                                type: string
+                              value:
+                                default: 1
+                                description: Specifies limit
+                                format: int64
+                                type: integer
+                            type: object
+                          nullable: true
+                          type: array
+                        value:
+                          default: 1
+                          description: Specifies limit
+                          format: int64
+                          type: integer
+                      type: object
+                    by_path:
+                      nullable: true
+                      properties:
+                        mask:
+                          default: rn/*:*:*
+                          description: Regular expression to parse path rn/account-id:project-id:resource-id
+                          type: string
+                        quotas:
+                          description: Specifies resource quotas SRLSv2
+                          nullable: true
+                          properties:
+                            flat:
+                              default: 1
+                              description: The current flat quota value of a resource
+                              type: integer
+                            soft:
+                              description: Specifies soft quota
+                              nullable: true
+                              properties:
+                                step:
+                                  default: 1
+                                  description: Resource soft quota increment value
+                                  type: integer
+                                value:
+                                  default: 1
+                                  description: The current soft quota value of a resource
+                                  type: integer
+                              type: object
+                          required:
+                          - flat
+                          type: object
+                        tenants:
+                          items:
+                            properties:
+                              name:
+                                description: Human-readable consumer description
+                                type: string
+                              quotas:
+                                description: Specifies resource quotas SRLSv2
+                                properties:
+                                  flat:
+                                    default: 1
+                                    description: The current flat quota value of a
+                                      resource
+                                    type: integer
+                                  soft:
+                                    description: Specifies soft quota
+                                    nullable: true
+                                    properties:
+                                      step:
+                                        default: 1
+                                        description: Resource soft quota increment
+                                          value
+                                        type: integer
+                                      value:
+                                        default: 1
+                                        description: The current soft quota value
+                                          of a resource
+                                        type: integer
+                                    type: object
+                                required:
+                                - flat
+                                type: object
+                              resourceName:
+                                description: Specifies particular consumer
+                                type: string
+                              schedule:
+                                description: Specifies unnamed schedule for quota
+                                nullable: true
+                                properties:
+                                  soft:
+                                    description: Specifies soft quota
+                                    nullable: true
+                                    properties:
+                                      step:
+                                        default: 1
+                                        description: Resource soft quota increment
+                                          value
+                                        type: integer
+                                      value:
+                                        default: 1
+                                        description: The current soft quota value
+                                          of a resource
+                                        type: integer
+                                    type: object
+                                  start:
+                                    description: Time to start schedule for quota
+                                    nullable: true
+                                    properties:
+                                      day:
+                                        default: '*'
+                                        description: Specifies day (1-31)
+                                        type: string
+                                      hour:
+                                        default: '*'
+                                        description: Specifies hour (0-24)
+                                        type: string
+                                      minute:
+                                        default: '*'
+                                        description: Specifies minutes (0-59)
+                                        type: string
+                                      month:
+                                        default: '*'
+                                        description: Specifies month (1-12, 1-january)
+                                        type: string
+                                      second:
+                                        default: '*'
+                                        description: Specifies seconds (0-59)
+                                        type: string
+                                      weekday:
+                                        default: '*'
+                                        description: Specifies weekday (0-6, 0-sunday)
+                                        type: string
+                                    type: object
+                                  stop:
+                                    description: Time to stop schedule for quota
+                                    nullable: true
+                                    properties:
+                                      day:
+                                        default: '*'
+                                        description: Specifies day (1-31)
+                                        type: string
+                                      hour:
+                                        default: '*'
+                                        description: Specifies hour (0-24)
+                                        type: string
+                                      minute:
+                                        default: '*'
+                                        description: Specifies minutes (0-59)
+                                        type: string
+                                      month:
+                                        default: '*'
+                                        description: Specifies month (1-12, 1-january)
+                                        type: string
+                                      second:
+                                        default: '*'
+                                        description: Specifies seconds (0-59)
+                                        type: string
+                                      weekday:
+                                        default: '*'
+                                        description: Specifies weekday (0-6, 0-sunday)
+                                        type: string
+                                    type: object
+                                  unit:
+                                    default: second
+                                    description: Specifies time unit
+                                    enum:
+                                    - second
+                                    - minute
+                                    - hour
+                                    - day
+                                    type: string
+                                  value:
+                                    default: 1
+                                    description: Specifies limit
+                                    type: integer
+                                required:
+                                - start
+                                - stop
+                                type: object
+                              unit:
+                                default: second
+                                description: Specifies time unit
+                                enum:
+                                - second
+                                - minute
+                                - hour
+                                - day
+                                type: string
+                            required:
+                            - quotas
+                            type: object
+                          nullable: true
+                          type: array
+                        unit:
+                          default: second
+                          description: Specifies time unit
+                          enum:
+                          - second
+                          - minute
+                          - hour
+                          - day
+                          type: string
+                      type: object
+                    endpoint:
+                      description: Represents target host
+                      minLength: 1
+                      type: string
+                    endpoint_set_selector:
+                      description: Specifies optional endpoint set selector for quotas
+                        synchronization
+                      nullable: true
+                      properties:
+                        export_to:
+                          description: Specifies namespaces to export endpoint to.
+                            Must contain own namespace at least
+                          items:
+                            type: string
+                          minItems: 1
+                          nullable: true
+                          type: array
+                        labels:
+                          additionalProperties:
+                            type: string
+                          description: Specifies endpoint set labels
+                          nullable: true
+                          type: object
+                        protection_coefficient:
+                          default: 100
+                          description: Specifies max quota percentage, see documentation
+                            for details
+                          format: int32
+                          maximum: 100
+                          minimum: 0
+                          type: integer
+                      type: object
+                    header:
+                      description: Specifies header to be used
+                      enum:
+                      - synapse-invoker-namespace
+                      - synapse-consumerid
+                      type: string
+                    invokers:
+                      items:
+                        properties:
+                          api_contract_id:
+                            description: API contract ID (from META) for integration
+                              with the Capacity Calculator
+                            pattern: ^(0|[1-9]\d*)$
+                            type: string
+                          header_regexp:
+                            description: Specifies regular expression for consumer
+                            pattern: ^[\P{C}]+$
+                            type: string
+                          header_value:
+                            description: Specifies particular consumer
+                            minLength: 1
+                            type: string
+                          name:
+                            description: Human-readable consumer description
+                            type: string
+                          schedule:
+                            description: Specifies unnamed schedule for quota
+                            nullable: true
+                            properties:
+                              soft:
+                                description: Specifies soft quota
+                                nullable: true
+                                properties:
+                                  step:
+                                    default: 1
+                                    description: Resource soft quota increment value
+                                    type: integer
+                                  value:
+                                    default: 1
+                                    description: The current soft quota value of a
+                                      resource
+                                    type: integer
+                                type: object
+                              start:
+                                description: Time to start schedule for quota
+                                nullable: true
+                                properties:
+                                  day:
+                                    default: '*'
+                                    description: Specifies day (1-31)
+                                    type: string
+                                  hour:
+                                    default: '*'
+                                    description: Specifies hour (0-24)
+                                    type: string
+                                  minute:
+                                    default: '*'
+                                    description: Specifies minutes (0-59)
+                                    type: string
+                                  month:
+                                    default: '*'
+                                    description: Specifies month (1-12, 1-january)
+                                    type: string
+                                  second:
+                                    default: '*'
+                                    description: Specifies seconds (0-59)
+                                    type: string
+                                  weekday:
+                                    default: '*'
+                                    description: Specifies weekday (0-6, 0-sunday)
+                                    type: string
+                                type: object
+                              stop:
+                                description: Time to stop schedule for quota
+                                nullable: true
+                                properties:
+                                  day:
+                                    default: '*'
+                                    description: Specifies day (1-31)
+                                    type: string
+                                  hour:
+                                    default: '*'
+                                    description: Specifies hour (0-24)
+                                    type: string
+                                  minute:
+                                    default: '*'
+                                    description: Specifies minutes (0-59)
+                                    type: string
+                                  month:
+                                    default: '*'
+                                    description: Specifies month (1-12, 1-january)
+                                    type: string
+                                  second:
+                                    default: '*'
+                                    description: Specifies seconds (0-59)
+                                    type: string
+                                  weekday:
+                                    default: '*'
+                                    description: Specifies weekday (0-6, 0-sunday)
+                                    type: string
+                                type: object
+                              unit:
+                                default: second
+                                description: Specifies time unit
+                                enum:
+                                - second
+                                - minute
+                                - hour
+                                - day
+                                type: string
+                              value:
+                                default: 1
+                                description: Specifies limit
+                                type: integer
+                            required:
+                            - start
+                            - stop
+                            type: object
+                          soft:
+                            description: Specifies soft quota
+                            nullable: true
+                            properties:
+                              step:
+                                default: 1
+                                description: Resource soft quota increment value
+                                type: integer
+                              value:
+                                default: 1
+                                description: The current soft quota value of a resource
+                                type: integer
+                            type: object
+                          unit:
+                            default: second
+                            description: Specifies time unit
+                            enum:
+                            - second
+                            - minute
+                            - hour
+                            - day
+                            type: string
+                          value:
+                            default: 1
+                            description: Specifies limit
+                            type: integer
+                        type: object
+                      nullable: true
+                      type: array
+                    name:
+                      description: Human-readable description of target host
+                      type: string
+                    overall_limit:
+                      description: Overall limit per endpoint. Value 0 - block all
+                        requests, negative value - unlimited
+                      format: int64
+                      nullable: true
+                      type: integer
+                    overall_schedule:
+                      description: Specifies unnamed schedule for quota
+                      nullable: true
+                      properties:
+                        soft:
+                          description: Specifies soft quota
+                          nullable: true
+                          properties:
+                            step:
+                              default: 1
+                              description: Resource soft quota increment value
+                              type: integer
+                            value:
+                              default: 1
+                              description: The current soft quota value of a resource
+                              type: integer
+                          type: object
+                        start:
+                          description: Time to start schedule for quota
+                          nullable: true
+                          properties:
+                            day:
+                              default: '*'
+                              description: Specifies day (1-31)
+                              type: string
+                            hour:
+                              default: '*'
+                              description: Specifies hour (0-24)
+                              type: string
+                            minute:
+                              default: '*'
+                              description: Specifies minutes (0-59)
+                              type: string
+                            month:
+                              default: '*'
+                              description: Specifies month (1-12, 1-january)
+                              type: string
+                            second:
+                              default: '*'
+                              description: Specifies seconds (0-59)
+                              type: string
+                            weekday:
+                              default: '*'
+                              description: Specifies weekday (0-6, 0-sunday)
+                              type: string
+                          type: object
+                        stop:
+                          description: Time to stop schedule for quota
+                          nullable: true
+                          properties:
+                            day:
+                              default: '*'
+                              description: Specifies day (1-31)
+                              type: string
+                            hour:
+                              default: '*'
+                              description: Specifies hour (0-24)
+                              type: string
+                            minute:
+                              default: '*'
+                              description: Specifies minutes (0-59)
+                              type: string
+                            month:
+                              default: '*'
+                              description: Specifies month (1-12, 1-january)
+                              type: string
+                            second:
+                              default: '*'
+                              description: Specifies seconds (0-59)
+                              type: string
+                            weekday:
+                              default: '*'
+                              description: Specifies weekday (0-6, 0-sunday)
+                              type: string
+                          type: object
+                        unit:
+                          default: second
+                          description: Specifies time unit
+                          enum:
+                          - second
+                          - minute
+                          - hour
+                          - day
+                          type: string
+                        value:
+                          default: 1
+                          description: Specifies limit
+                          type: integer
+                      required:
+                      - start
+                      - stop
+                      type: object
+                    overall_unit:
+                      description: Specifies time unit for overall limit
+                      enum:
+                      - second
+                      - minute
+                      - hour
+                      - day
+                      nullable: true
+                      type: string
+                    shortname:
+                      description: Short description of target host without spaces,
+                        special characters, 3-15 English letters and/or digits
+                      pattern: ^[a-z0-9]{3,15}$
+                      type: string
+                    unit:
+                      description: Specifies time unit
+                      enum:
+                      - second
+                      - minute
+                      - hour
+                      - day
+                      type: string
+                    value:
+                      description: Specifies limit
+                      format: int64
+                      nullable: true
+                      type: integer
+                  required:
+                  - endpoint
+                  - shortname
+                  type: object
+                nullable: true
+                type: array
+              envoyVersion:
+                description: Version of the used Envoy
+                type: string
+              rlnamespace:
+                description: Specifies Rate Limit Namespace, this allow to have multiple
+                  SRLS Operators in same cluster
+                nullable: true
+                type: string
+              rlserver:
+                description: Specifies Rate Limiter service to be used
+                type: string
+              rlservercert:
+                description: Certificates for access to RLS (the block is ignored
+                  due to the switch to Synapse Service Mesh/Istio certificates)
+                nullable: true
+                properties:
+                  cert:
+                    description: Path to certificate chain
+                    minLength: 1
+                    type: string
+                  key:
+                    description: Path to private key
+                    minLength: 1
+                    type: string
+                  trust_ca:
+                    description: Path to trusted CA cert
+                    minLength: 1
+                    type: string
+                required:
+                - cert
+                - key
+                - trust_ca
+                type: object
+              rlserverport:
+                default: 8081
+                description: Specifies Rate Limiter service port to be used
+                format: int32
+                maximum: 65000
+                minimum: 1
+                type: integer
+              type_mode:
+                default: full
+                description: Specifies current quota allocation mode
+                enum:
+                - full
+                - share
+                type: string
+              visibility:
+                default: cluster
+                description: Specifies current settings visibility
+                enum:
+                - namespace
+                - cluster
+                type: string
+              workloadSelector:
+                description: Selector used to find ingress gateway in provider namespace
+                properties:
+                  labels:
+                    additionalProperties:
+                      type: string
+                    nullable: true
+                    type: object
+                type: object
+            type: object
+          status:
+            description: GlobalRateLimitStatus defines the observed state of GlobalRateLimit
+            properties:
+              applied:
+                description: Is applied successfully or not
+                type: boolean
+              attempt:
+                description: number of attempts
+                type: integer
+              message:
+                description: Response message from Rate Limiter operator
+                type: string
+              operator_version:
+                description: operator version
+                type: string
+              statuses:
+                description: List with statuses
+                items:
+                  properties:
+                    name:
+                      description: Status of settings loading on the RateLimiterService
+                      type: string
+                    reason:
+                      description: Reason represents the cause of particular status
+                      type: string
+                    status:
+                      description: Status of adding EnvoyFilter's
+                      type: string
+                  type: object
+                nullable: true
+                type: array
+              timestamp:
+                description: Last status update timestamp
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
